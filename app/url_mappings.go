@@ -1,11 +1,11 @@
 package app
 
 import (
-	controllers "mvc/controllers/users"
+	"mvc/controllers/donors"
 )
 
 func mapUrls() {
-	router.GET("/donors/:donorId", controllers.GetDonor)
-	router.GET("/donors", controllers.SearchDonor)
-	router.POST("/donors", controllers.CreateDonor)
+	router.GET("/donors/:donorId", donors.GetDonor)
+	router.GET("/donors", donors.SearchDonor)
+	router.POST("/donors", donors.CreateDonor)
 }
