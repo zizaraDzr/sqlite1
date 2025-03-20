@@ -5,6 +5,7 @@ import (
 	services "mvc/services/donors"
 	"mvc/utils/errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -43,5 +44,18 @@ func SearchDonor(c *gin.Context) {
 }
 
 func GetDonor(c *gin.Context) {
-	c.String(http.StatusNotImplemented, "Not implemented")
+	donorId, donorErr := strconv.ParseInt(c.Param("donorId"), 10, 64)
+	if donorErr != nil {
+		err := errors.NewBadRequestError("donor id should be a number")
+		c.JSON(err.Status, err)
+		return
+	}
+
+	result, getErr := services.GetDonor(donorId)
+	if getErr != nil {
+		c.JSON(getErr.Status, getErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
 }
