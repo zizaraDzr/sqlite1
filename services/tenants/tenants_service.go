@@ -7,7 +7,7 @@ func GetAll() ([]tenants.Tenant, error) {
 }
 
 func GetByID(id string) (tenants.Tenant, error) {
-	return tenants.GetByID(id)
+	return tenants.GetByGuid(id)
 }
 
 func Create(user *tenants.Tenant) error {

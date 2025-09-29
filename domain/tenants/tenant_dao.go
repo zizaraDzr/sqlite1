@@ -1,6 +1,7 @@
 package tenants
 
 import (
+	"fmt"
 	"log"
 
 	"gorm.io/driver/postgres"
@@ -27,9 +28,9 @@ func GetAll() ([]Tenant, error) {
 	return users, result.Error
 }
 
-func GetByID(id string) (Tenant, error) {
+func GetByGuid(guid string) (Tenant, error) {
 	var user Tenant
-	result := db.First(&user, id)
+	result := db.Where("guid = ?", guid).First(&user)
 	return user, result.Error
 }
 
@@ -38,15 +39,21 @@ func Create(tenant *Tenant) error {
 	return result.Error
 }
 
-func Update(id string, user *Tenant) error {
+func Update(guid string, user *Tenant) error {
 	var existing Tenant
-	if err := db.First(&existing, id).Error; err != nil {
+	if err := db.Where("guid = ?", guid).First(&existing).Error; err != nil {
 		return err
 	}
 	existing.Name = user.Name
+	existing.Website = user.Website
+	existing.Properties = user.Properties
+	existing.IsBlocked = user.IsBlocked
+	existing.IsDeleted = user.IsDeleted
+	existing.IsPlatform = user.IsPlatform
+	fmt.Println(existing)
 	return db.Save(&existing).Error
 }
 
-func Delete(id string) error {
-	return db.Delete(&Tenant{}, id).Error
+func Delete(guid string) error {
+	return db.Where("guid = ?", guid).Delete(&Tenant{}).Error
 }

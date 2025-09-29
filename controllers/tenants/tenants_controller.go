@@ -17,8 +17,8 @@ func GetTenants(c *gin.Context) {
 }
 
 func GetTenant(c *gin.Context) {
-	id := c.Param("id")
-	result, err := tenants.GetByID(id)
+	guid := c.Param("guid")
+	result, err := tenants.GetByGuid(guid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Tenant not found"})
 		return
@@ -39,23 +39,24 @@ func CreateTenant(c *gin.Context) {
 	c.JSON(http.StatusCreated, tenant)
 }
 
-func UpdateUser(c *gin.Context) {
-	id := c.Param("id")
+func UpdateTenant(c *gin.Context) {
+	guid := c.Param("guid")
 	var tenant tenants.Tenant
 	if err := c.ShouldBindJSON(&tenant); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := tenants.Update(id, &tenant); err != nil {
+	if err := tenants.Update(guid, &tenant); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, tenant)
 }
 
-func DeleteUser(c *gin.Context) {
-	id := c.Param("id")
-	if err := tenants.Delete(id); err != nil {
+func DeleteTenant(c *gin.Context) {
+	guid := c.Param("guid")
+	println(guid)
+	if err := tenants.Delete(guid); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
